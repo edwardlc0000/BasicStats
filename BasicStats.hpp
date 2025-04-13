@@ -212,8 +212,8 @@ namespace BasicStats
 	 * @param data The vector of numbers.
 	 * @return A new vector containing the elements that satisfy the predicate.
 	 */
-	template<typename T>
-	std::vector<T> filter(std::vector<T>& data, std::function<bool(T)> predicate)
+	template<typename T, typename Function>
+	std::vector<T> filter(const std::vector<T>& data, Function predicate)
 	{
 		std::vector<T> result;
 		std::copy_if(data.begin(), data.end(), std::back_inserter(result), predicate);
@@ -228,8 +228,8 @@ namespace BasicStats
 	 * @param data The vector of numbers.
 	 * @return A new vector containing the elements that satisfy the predicate.
 	 */
-	template<typename T>
-	std::vector<T> filter(std::vector<T>& criteria_data, std::vector<T>& data, std::function<bool(T)> predicate)
+	template<typename T, typename Function>
+	std::vector<T> filter(const std::vector<T>& data, const std::vector<T>& criteria_data, Function predicate)
 	{
 		if (criteria_data.size() != data.size())
 		{
