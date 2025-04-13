@@ -72,15 +72,14 @@ TEST(BasicStatsTests, PercentileInc) {
 	EXPECT_THROW(BasicStats::percentile_inc(std::vector<int>{1, 2, 3, 4, 5}, -10), std::out_of_range);
 	EXPECT_THROW(BasicStats::percentile_inc(std::vector<int>{1, 2, 3, 4, 5}, 110), std::out_of_range);
 }
-/*
+
 TEST(BasicStatsTests, FilterSinglePredicate) {
-	auto result = BasicStats::filter(std::vector<int>{1, 2, 3, 4, 5}, [](int x) { return x > 3; });
+	auto result = BasicStats::filter(std::vector<int>{ 1, 2, 3, 4, 5 }, [](int x) { return x > 3; });
 	EXPECT_EQ(result, std::vector<int>({ 4, 5 }));
 }
 
 TEST(BasicStatsTests, FilterWithCriteria) {
-	auto result = BasicStats::filter(std::vector<int>{1, 2, 3, 4, 5}, std::vector<int>{10, 20, 30, 40, 50}, [](int x) { return x > 20; });
+	auto result = BasicStats::filter(std::vector<int>{1, 2, 3, 4, 5}, std::vector<int>{10, 20, 30, 40, 50}, [](int x) { return x > 30; });
 	EXPECT_EQ(result, std::vector<int>({ 4, 5 }));
 	EXPECT_THROW(BasicStats::filter(std::vector<int>{1, 2}, std::vector<int>{1}, [](int x) { return x > 0; }), std::invalid_argument);
 }
-*/
