@@ -219,6 +219,7 @@ namespace BasicStats
 	template<typename T, typename Function>
 	std::vector<T> filter(const std::vector<T>& data, Function predicate)
 	{
+		static_assert(std::is_invocable_r_v<bool, Function, T>, "Predicate must be a callable that returns bool.");
 		std::vector<T> result;
 		std::copy_if(data.begin(), data.end(), std::back_inserter(result), predicate);
 		return result;
@@ -235,6 +236,7 @@ namespace BasicStats
 	template<typename T, typename Function>
 	std::vector<T> filter(const std::vector<T>& data, const std::vector<T>& criteria_data, Function predicate)
 	{
+		static_assert(std::is_invocable_r_v<bool, Function, T>, "Predicate must be a callable that returns bool.");
 		if (criteria_data.size() != data.size())
 		{
 			throw std::invalid_argument("Criteria and data vectors must be of the same size.");
