@@ -219,8 +219,6 @@ namespace BasicStats
 	template<typename T, typename Function>
 	std::vector<T> filter(const std::vector<T>& data, Function predicate)
 	{
-		static_assert(std::is_same_v<T, typename std::decay<decltype(predicate(std::declval<T>()))>::type>,
-			"Predicate must return a boolean value.");
 		std::vector<T> result;
 		std::copy_if(data.begin(), data.end(), std::back_inserter(result), predicate);
 		return result;
@@ -237,8 +235,6 @@ namespace BasicStats
 	template<typename T, typename Function>
 	std::vector<T> filter(const std::vector<T>& data, const std::vector<T>& criteria_data, Function predicate)
 	{
-		static_assert(std::is_same_v<T, typename std::decay<decltype(predicate(std::declval<T>()))>::type>,
-			"Predicate must return a boolean value.");
 		if (criteria_data.size() != data.size())
 		{
 			throw std::invalid_argument("Criteria and data vectors must be of the same size.");
