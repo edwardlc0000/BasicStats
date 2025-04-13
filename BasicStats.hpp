@@ -102,6 +102,36 @@ namespace BasicStats
 	{
 		return std::sqrt(variance(data));
 	}
+
+	/**
+	 * @brief Calculate the coefficient of variation of a vector of numbers.
+	 *
+	 * @tparam T The type of the elements in the vector.
+	 * @param data The vector of numbers.
+	 * @return The coefficient of variation of the elements in the vector.
+	 */
+	template<typename T>
+	double coeff_of_variation(const std::vector<T>& data)
+	{
+		if (data.empty()) return 0.0;
+		return stdev(data) / mean(data);
+	}
+
+	/**
+	 * @brief Calculate the range of a vector of numbers.
+	 * 
+	 * @tparam T The type of the elements in the vector.
+	 * @param data The vector of numbers.
+	 * @return The range of the elements in the vector.
+	 */
+	template<typename T>
+	double range(const std::vector<T>& data)
+	{
+		if (data.empty()) return 0.0;
+		auto [min, max] = std::minmax_element(data.begin(), data.end());
+		return *max - *min;
+	}
+
 }
 
 #endif // !BASIC_STATS_HPP
