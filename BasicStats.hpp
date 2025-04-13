@@ -170,6 +170,20 @@ namespace BasicStats
 		return *max - *min;
 	}
 
+	/**
+	 * @brief Calculate the interquartile range (IQR) of a vector of numbers.
+	 *
+	 * @tparam T The type of the elements in the vector.
+	 * @param data The vector of numbers.
+	 * @return The interquartile range of the elements in the vector.
+	 */
+	template<typename T>
+	double iqr(const std::vector<T>& data)
+	{
+		if (data.empty()) return 0.0;
+		return third_quartile(data) - first_quartile(data);
+	}
+
 }
 
 #endif // !BASIC_STATS_HPP
