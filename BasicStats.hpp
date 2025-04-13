@@ -60,7 +60,7 @@ namespace BasicStats
 	 * @return The median of the elements in the vector.
 	 */
 	template<typename T>
-	double median(std::vector<T>& data)
+	double median(const std::vector<T>& data)
 	{
 		if (data.empty()) return 0.0;
 		std::sort(data.begin(), data.end());
@@ -69,6 +69,38 @@ namespace BasicStats
 			return (data[n / 2 - 1] + data[n / 2]) / 2.0;
 		else
 			return data[n / 2];
+	}
+
+	/**
+	 * @brief Calculate the variance of a vector of numbers.
+	 * 
+	 * @tparam T The type of the elements in the vector.
+	 * @param data The vector of numbers.
+	 * @return The variance of the elements in the vector.
+	 */
+	template<typename T>
+	double variance(const std::vector<T>& data)
+	{
+		if (data.empty()) return 0.0;
+		double mean_value = mean(data);
+		double sum_squared_diff = std::accumulate(data.begin(), data.end(), 0.0,
+			[mean_value](double acc, T value) {
+				return acc + (value - mean_value) * (value - mean_value);
+			});
+		return sum_squared_diff / data.size();
+	}
+
+	/**
+	 * @brief Calculate the standard deviation of a vector of numbers.
+	 *
+	 * @tparam T The type of the elements in the vector.
+	 * @param data The vector of numbers.
+	 * @return The standard deviation of the elements in the vector.
+	 */
+	template<typename T>
+	double stdev(const std::vector<T>& data)
+	{
+		return std::sqrt(variance(data));
 	}
 }
 
