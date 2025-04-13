@@ -66,11 +66,11 @@ TEST(BasicStatsTests, IQR) {
 }
 
 TEST(BasicStatsTests, PercentileInc) {
-	EXPECT_DOUBLE_EQ(BasicStats::percentile_inc(std::vector<int>{1, 2, 3, 4, 5}, 50), 3.0);
-	EXPECT_DOUBLE_EQ(BasicStats::percentile_inc(std::vector<int>{1, 2, 3, 4, 5}, 25), 2.0);
-	EXPECT_NEAR(BasicStats::percentile_inc(std::vector<int>{1, 2, 3, 4, 5}, 75), 4.0, 0.01);
-	EXPECT_THROW(BasicStats::percentile_inc(std::vector<int>{1, 2, 3, 4, 5}, -10), std::out_of_range);
-	EXPECT_THROW(BasicStats::percentile_inc(std::vector<int>{1, 2, 3, 4, 5}, 110), std::out_of_range);
+	EXPECT_DOUBLE_EQ(BasicStats::percentile(std::vector<int>{1, 2, 3, 4, 5}, 50), 3.0);
+	EXPECT_DOUBLE_EQ(BasicStats::percentile(std::vector<int>{1, 2, 3, 4, 5}, 25), 2.0);
+	EXPECT_NEAR(BasicStats::percentile(std::vector<int>{1, 2, 3, 4, 5}, 75), 4.0, 0.01);
+	EXPECT_THROW(BasicStats::percentile(std::vector<int>{1, 2, 3, 4, 5}, -10), std::out_of_range);
+	EXPECT_THROW(BasicStats::percentile(std::vector<int>{1, 2, 3, 4, 5}, 110), std::out_of_range);
 }
 
 TEST(BasicStatsTests, FilterSinglePredicate) {

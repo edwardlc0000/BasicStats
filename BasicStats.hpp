@@ -195,7 +195,7 @@ namespace BasicStats
 	 * @return The value at the specified percentile.
 	 */
 	template<typename T>
-	double percentile_inc(const std::vector<T>& data, double p)
+	double percentile(const std::vector<T>& data, double p)
 	{
 		if (data.empty()) return 0.0;
 		if (p < 0 || p > 100) throw std::out_of_range("Percentile must be between 0 and 100.");
