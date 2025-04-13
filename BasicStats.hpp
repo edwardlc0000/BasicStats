@@ -4,7 +4,9 @@
 #define BASIC_STATS_HPP
 
 #include <vector>
+#include <utility>
 #include <algorithm>
+#include <random>
 #include <functional>
 #include <numeric>
 #include <cmath>
@@ -251,6 +253,90 @@ namespace BasicStats
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * @brief Resample a vector of numbers with replacement.
+	 *
+	 * @tparam T The type of the elements in the vector.
+	 * @param data The vector of numbers.
+	 * @param seed The seed for random number generation (default: random_device).
+	 * @return A new vector containing the resampled elements.
+	 */
+	template<typename T>
+	std::vector<T> resample(const std::vector<T>& data, unsigned int seed = std::random_device{}())
+	{
+		if (data.empty()) return {};
+		std::vector<T> result;
+		result.reserve(data.size());
+		std::mt19937 gen(seed);
+		std::uniform_int_distribution<size_t> dist(0, data.size() - 1);
+		for (size_t i = 0; i < data.size(); i++)
+		{
+			size_t index = dist(gen);
+			result.push_back(data[index]);
+		}
+		return result;
+	}
+
+	/**
+	 * @brief Calculate the confidence interval of a statistic using bootstrap resampling.
+	 * 
+	 * @tparam T The type of the elements in the vector.
+	 * @param data The vector of numbers.
+	 * @param func The function to apply to the resampled data.
+	 * @param confidence_level The confidence level (0-100).
+	 * @param nmax The number of bootstrap samples to generate.
+	 * @return A pair containing the lower and upper bounds of the confidence interval.
+	 */
+	template<typename T, typename Function>
+	std::pair<double, double> confidence_interval(const std::vector<T>& data, Function func, double confidence_level, unsigned int nmax = 1024)
+	{
+		static_assert(std::is_invocable_r_v<double, Function, const std::vector<T>&>, "Function must return double and accept a vector of T.");
+		if (data.empty()) return { 0.0, 0.0 };
+		if (confidence_level <= 0 || confidence_level >= 100) throw std::out_of_range("Confidence level must be between 0 and 1.");
+		std::vector<T> result_vector;
+		for (unsigned int i = 0; i < nmax; ++i)
+		{
+			std::vector<T> resamepled_data = resample(data);
+			double result = func(resampled_data);
+			result_vector.push_back(result);
+		}
+		double min = percentile(result_vector, (100 - confidence_level) / 2);
+		double max = percentile(result_vector, 100 - (100 - confidence_level) / 2);
+		return { min, max };
+	}
+
+	/**
+	 * @brief Calculate the confidence interval of the difference between two statistics using bootstrap resampling.
+	 * 
+	 * @tparam T The type of the elements in the vector.
+	 * @param data1 The first vector of numbers.
+	 * @param data2 The second vector of numbers.
+	 * @param func The function to apply to the resampled data.
+	 * @param confidence_level The confidence level (0-100).
+	 * @param nmax The number of bootstrap samples to generate.
+	 * @return A pair containing the lower and upper bounds of the confidence interval.
+	 */
+	template<typename T, typename Function>
+	std::pair<double, double> confidence_interval(const std::vector<T>& data1, const std::vector<T>& data2, Function func, double confidence_level, unsigned int nmax = 1024)
+	{
+		static_assert(std::is_invocable_r_v<double, Function, const std::vector<T>&>, "Function must return double and accept a vector of T.");
+		if (data1.empty() || data2.empty()) return { 0.0, 0.0 };
+		if (confidence_level <= 0 || confidence_level >= 100) throw std::out_of_range("Confidence level must be between 0 and 1.");
+		std::vector<T> result_vector;
+		for (unsigned int i = 0; i < nmax; ++i)
+		{
+			std::vector<T> resampled_data1 = resample(data1);
+			std::vector<T> resampled_data2 = resample(data2);
+			double result1 = func(resampled_data1);
+			double result2 = func(resampled_data2);
+			double result = result1 - result2;
+			result_vector.push_back(result);
+		}
+		double min = percentile(result_vector, (100 - confidence_level) / 2);
+		double max = percentile(result_vector, 100 - (100 - confidence_level) / 2);
+		return { min, max };
 	}
 
 }
