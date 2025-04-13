@@ -72,6 +72,44 @@ namespace BasicStats
 	}
 
 	/**
+	 * @brief Calculate the first quartile (Q1) of a vector of numbers.
+	 * 
+	 * @tparam T The type of the elements in the vector.
+	 * @param data The vector of numbers.
+	 * @return The first quartile of the elements in the vector.
+	 */
+	template<typename T>
+	double first_quartile(const std::vector<T>& data)
+	{
+		if (data.empty()) return 0.0;
+		std::sort(data.begin(), data.end());
+		size_t n = data.size();
+		if (n % 2 == 0)
+			return median(std::vector<T>(data.begin(), data.begin() + n / 2));
+		else
+			return median(std::vector<T>(data.begin(), data.begin() + n / 2 + 1));
+	}
+
+	/**
+	 * @brief Calculate the third quartile (Q3) of a vector of numbers.
+	 *
+	 * @tparam T The type of the elements in the vector.
+	 * @param data The vector of numbers.
+	 * @return The third quartile of the elements in the vector.
+	 */
+	template<typename T>
+	double third_quartile(const std::vector<T>& data)
+	{
+		if (data.empty()) return 0.0;
+		std::sort(data.begin(), data.end());
+		size_t n = data.size();
+		if (n % 2 == 0)
+			return median(std::vector<T>(data.begin() + n / 2, data.end()));
+		else
+			return median(std::vector<T>(data.begin() + n / 2 + 1, data.end()));
+	}
+
+	/**
 	 * @brief Calculate the variance of a vector of numbers.
 	 * 
 	 * @tparam T The type of the elements in the vector.
