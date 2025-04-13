@@ -20,7 +20,7 @@ namespace BasicStats
 	 * @return The sum of the elements in the vector.
 	 */
 	template<typename T>
-	double sum(std::vector<T>& data)
+	double sum(const std::vector<T>& data)
 	{
 		return std::accumulate(data.begin(), data.end(), 0.0);
 	}
@@ -33,7 +33,7 @@ namespace BasicStats
 	 * @return The arithmetic mean of the elements in the vector.
 	 */
 	template<typename T>
-	double mean(std::vector<T>& data)
+	double mean(const std::vector<T>& data)
 	{
 		if (data.empty()) return 0.0;
 		return sum(data) / data.size();
@@ -47,7 +47,7 @@ namespace BasicStats
 	 * @return The geometric mean of the elements in the vector.
 	 */
 	template<typename T>
-	double geo_mean(std::vector<T>& data)
+	double geo_mean(const std::vector<T>& data)
 	{
 		if (data.empty()) return 0.0;
 		double product = std::accumulate(data.begin(), data.end(), 1.0, std::multiplies<double>());
@@ -62,15 +62,16 @@ namespace BasicStats
 	 * @return The median of the elements in the vector.
 	 */
 	template<typename T>
-	double median(std::vector<T>& data)
+	double median(const std::vector<T>& data)
 	{
 		if (data.empty()) return 0.0;
-		std::sort(data.begin(), data.end());
-		size_t n = data.size();
+		std::vector<T> sorted_data = data;
+		std::sort(sorted_data.begin(), sorted_data.end());
+		size_t n = sorted_data.size();
 		if (n % 2 == 0)
-			return (data[n / 2 - 1] + data[n / 2]) / 2.0;
+			return (sorted_data[n / 2 - 1] + sorted_data[n / 2]) / 2.0;
 		else
-			return data[n / 2];
+			return sorted_data[n / 2];
 	}
 
 	/**
@@ -81,15 +82,16 @@ namespace BasicStats
 	 * @return The first quartile of the elements in the vector.
 	 */
 	template<typename T>
-	double first_quartile(std::vector<T>& data)
+	double first_quartile(const std::vector<T>& data)
 	{
 		if (data.empty()) return 0.0;
-		std::sort(data.begin(), data.end());
-		size_t n = data.size();
+		std::vector<T> sorted_data = data;
+		std::sort(sorted_data.begin(), sorted_data.end());
+		size_t n = sorted_data.size();
 		if (n % 2 == 0)
-			return median(std::vector<T>(data.begin(), data.begin() + n / 2));
+			return median(std::vector<T>(sorted_data.begin(), sorted_data.begin() + n / 2));
 		else
-			return median(std::vector<T>(data.begin(), data.begin() + n / 2 + 1));
+			return median(std::vector<T>(sorted_data.begin(), sorted_data.begin() + n / 2 + 1));
 	}
 
 	/**
@@ -100,12 +102,13 @@ namespace BasicStats
 	 * @return The third quartile of the elements in the vector.
 	 */
 	template<typename T>
-	double third_quartile(std::vector<T>& data)
+	double third_quartile(const std::vector<T>& data)
 	{
 		if (data.empty()) return 0.0;
-		std::sort(data.begin(), data.end());
-		size_t n = data.size();
-		return median(std::vector<T>(data.begin() + n / 2, data.end()));
+		std::vector<T> sorted_data = data;
+		std::sort(sorted_data.begin(), sorted_data.end());
+		size_t n = sorted_data.size();
+		return median(std::vector<T>(sorted_data.begin() + n / 2, sorted_data.end()));
 	}
 
 	/**
@@ -116,7 +119,7 @@ namespace BasicStats
 	 * @return The variance of the elements in the vector.
 	 */
 	template<typename T>
-	double variance(std::vector<T>& data)
+	double variance(const std::vector<T>& data)
 	{
 		if (data.empty()) return 0.0;
 		double mean_value = mean(data);
@@ -135,7 +138,7 @@ namespace BasicStats
 	 * @return The standard deviation of the elements in the vector.
 	 */
 	template<typename T>
-	double stdev(std::vector<T>& data)
+	double stdev(const std::vector<T>& data)
 	{
 		return std::sqrt(variance(data));
 	}
@@ -148,7 +151,7 @@ namespace BasicStats
 	 * @return The coefficient of variation of the elements in the vector.
 	 */
 	template<typename T>
-	double coeff_of_variation(std::vector<T>& data)
+	double coeff_of_variation(const std::vector<T>& data)
 	{
 		if (data.empty()) return 0.0;
 		return stdev(data) / mean(data);
@@ -162,7 +165,7 @@ namespace BasicStats
 	 * @return The range of the elements in the vector.
 	 */
 	template<typename T>
-	double range(std::vector<T>& data)
+	double range(const std::vector<T>& data)
 	{
 		if (data.empty()) return 0.0;
 		auto [min, max] = std::minmax_element(data.begin(), data.end());
@@ -177,7 +180,7 @@ namespace BasicStats
 	 * @return The interquartile range of the elements in the vector.
 	 */
 	template<typename T>
-	double iqr(std::vector<T>& data)
+	double iqr(const std::vector<T>& data)
 	{
 		if (data.empty()) return 0.0;
 		return third_quartile(data) - first_quartile(data);
@@ -192,17 +195,18 @@ namespace BasicStats
 	 * @return The value at the specified percentile.
 	 */
 	template<typename T>
-	double percentile_inc(std::vector<T>& data, double p)
+	double percentile_inc(const std::vector<T>& data, double p)
 	{
 		if (data.empty()) return 0.0;
 		if (p < 0 || p > 100) throw std::out_of_range("Percentile must be between 0 and 100.");
-		std::sort(data.begin(), data.end());
-		double rank = (p / 100) * (data.size() - 1);
+		std::vector<T> sorted_data = data;
+		std::sort(sorted_data.begin(), sorted_data.end());
+		double rank = (p / 100) * (sorted_data.size() - 1);
 		size_t lower = static_cast<size_t>(std::floor(rank));
 		size_t upper = static_cast<size_t>(std::ceil(rank));
 		double weight = rank - lower;
-		if (upper >= data.size()) return data[lower];
-		return data[lower] + weight * (data[upper] - data[lower]);
+		if (upper >= sorted_data.size()) return sorted_data[lower];
+		return sorted_data[lower] + weight * (sorted_data[upper] - sorted_data[lower]);
 	}
 
 	/**
