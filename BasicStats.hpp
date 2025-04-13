@@ -5,8 +5,10 @@
 
 #include <vector>
 #include <algorithm>
+#include <functional>
 #include <numeric>
 #include <cmath>
+#include <stdexcept>
 
 namespace BasicStats
 {
@@ -182,6 +184,48 @@ namespace BasicStats
 	{
 		if (data.empty()) return 0.0;
 		return third_quartile(data) - first_quartile(data);
+	}
+
+	/**
+	 * @brief Filter a vector of numbers based on a predicate function.
+	 * 
+	 * @tparam T The type of the elements in the vector.
+	 * @param data The vector of numbers.
+	 * @return A new vector containing the elements that satisfy the predicate.
+	 */
+	template<typename T>
+	std::vector<T> filter(const std::vector<T>& data, std::function<bool(T)> predicate)
+	{
+		std::vector<T> result;
+		std::copy_if(data.begin(), data.end(), std::back_inserter(result), predicate);
+		return result;
+	}
+
+	/**
+	 * @brief Filter a vector of numbers based on a predicate function and a criteria vector.
+	 *
+	 * @tparam T The type of the elements in the vector.
+	 * @param criteria_data The vector of criteria numbers.
+	 * @param data The vector of numbers.
+	 * @return A new vector containing the elements that satisfy the predicate.
+	 */
+	template<typename T>
+	std::vector<T> filter(const std::vector<T>& criteria_data, const std::vector<T>& data, std::function<bool(T)> predicate)
+	{
+		if (criteria_data.size() != data.size())
+		{
+			throw std::invalid_argument("Criteria and data vectors must be of the same size.");
+		}
+
+		std::vector<T> result;
+		for (size_t i = 0; i < criteria_data.size(); i++)
+		{
+			if (predicate(criteria_data[i]))
+			{
+				result.push_back(data[i]);
+			}
+		}
+		return result;
 	}
 
 }
