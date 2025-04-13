@@ -105,10 +105,7 @@ namespace BasicStats
 		if (data.empty()) return 0.0;
 		std::sort(data.begin(), data.end());
 		size_t n = data.size();
-		if (n % 2 == 0)
-			return median(std::vector<T>(data.begin() + n / 2, data.end()));
-		else
-			return median(std::vector<T>(data.begin() + n / 2 + 1, data.end()));
+		return median(std::vector<T>(data.begin() + n / 2, data.end()));
 	}
 
 	/**
