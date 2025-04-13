@@ -129,6 +129,9 @@
   <ItemGroup>
     <ClCompile Include="BasicStats.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BasicStats.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
